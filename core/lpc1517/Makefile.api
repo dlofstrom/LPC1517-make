@@ -1,0 +1,34 @@
+# This makefile compiles the abstraction layer for the application code
+BINARY = test
+CC = arm-none-eabi-gcc
+COPY = arm-none-eabi-objcopy
+SDK_PATH = sdk
+BUILD_PATH = build
+
+all: $(BINARY)
+
+# Include SDK makefile
+include $(SDK_PATH)/Makefile.sdk
+
+# Test code
+MAIN = main.c
+MAIN_OBJ = $(BUILD_PATH)/$(MAIN:.c=.o)
+OBJ += $(MAIN_OBJ)
+CFLAGS += -Tlpc1517.ld
+
+$(MAIN_OBJ): $(MAIN)
+	$(CC) -I$(INC) $(CFLAGS) -o $@ -c $<
+
+$(BINARY): $(BUILD_PATH)/$(BINARY).hex $(BUILD_PATH)/$(BINARY).bin $(BUILD_PATH)/$(BINARY).elf
+
+$(BUILD_PATH)/%.hex: $(BUILD_PATH)/%.elf
+	$(COPY) -O ihex $< $@
+
+$(BUILD_PATH)/%.bin: $(BUILD_PATH)/%.elf
+	$(COPY) -v -O binary $< $@
+
+$(BUILD_PATH)/%.elf: $(OBJ)
+	$(CC) -I$(INC) $(CFLAGS) $(OBJ) -o $@
+
+clean:
+	rm -rf $(BUILD_PATH)

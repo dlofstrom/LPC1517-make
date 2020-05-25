@@ -1,0 +1,42 @@
+# Makefile for compiling lpcopen_2_20_lpcxpresso_nxp_lpcxpresso_1549
+
+# Object files are put in the build path dir under the same file
+# structure as the main repo file structure, a potential issue here is
+# that if the SDK_PATH is a relative path pointing outside the main
+# repo, buildfiles can be put in some other location on the file
+# system.. This is not preferred. Therefore the SDK_PATH has to be a
+# relative path to a subdirectory of the main repo.
+
+# SDK_PATH should be set by parent makefile
+ifndef SDK_PATH
+$(error SDK_PATH is not set)
+endif
+
+# Build path
+ifndef BUILD_PATH
+$(error BUILD_PATH is not set)
+endif
+
+# The user will have to extract the lpcopen zip file
+LPCOPEN_PATH = $(SDK_PATH)/lpcopen_2_20_lpcxpresso_nxp_lpcxpresso_1549
+ifeq ($(wildcard $(LPCOPEN_PATH)/*),)
+$(error $(LPCOPEN_PATH) does not exist, please extract $(LPCOPEN_PATH).zip)
+endif
+
+# Assemble SDK files
+LPC_15XX_PATH = $(LPCOPEN_PATH)/lpc_chip_15xx
+LPC_STARTUP_FILE = $(LPCOPEN_PATH)/periph_blinky/example/src/cr_startup_lpc15xx.c
+SDK_SRC_FILES = $(wildcard $(LPC_15XX_PATH)/src/*.c) $(LPC_STARTUP_FILE)
+SDK_INC = $(LPC_15XX_PATH)/inc
+SDK_OBJ_FILES = $(addprefix $(BUILD_PATH)/, $(SDK_SRC_FILES:.c=.o))
+SDK_CFLAGS = -DCORE_M3 -mcpu=cortex-m3 -Xlinker --gc-sections -Xlinker
+
+# Add SDK specific variables to global variables
+INC += $(SDK_INC)
+OBJ += $(SDK_OBJ_FILES)
+CFLAGS += $(SDK_CFLAGS)
+
+# Build SDK files
+$(SDK_OBJ_FILES): $(BUILD_PATH)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) -I$(SDK_INC) $(CFLAGS) -o $@ -c $<
