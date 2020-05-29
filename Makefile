@@ -16,6 +16,17 @@ MAIN = main.c
 MAIN_OBJ = $(BUILD_PATH)/$(MAIN:.c=.o)
 OBJ += $(MAIN_OBJ)
 
+# J-Link support
+JLINK = JLinkExe -device $(CORE) -if swd -speed 4000
+JLINK_FILE = $(BUILD_PATH)/flash.jlink
+
+.PHONY: flash
+flash: all $(JLINK_FILE)
+	$(JLINK) $(JLINK_FILE)
+
+$(JLINK_FILE):
+	echo "loadfile $(BUILD_PATH)/$(BINARY).hex\nr\nexit\n" > $(JLINK_FILE)
+
 $(MAIN_OBJ): $(MAIN)
 	$(CC) -I$(INC) $(CFLAGS) -o $@ -c $<
 
@@ -30,5 +41,6 @@ $(BUILD_PATH)/%.bin: $(BUILD_PATH)/%.elf
 $(BUILD_PATH)/%.elf: $(OBJ)
 	$(CC) -I$(INC) $(CFLAGS) $(OBJ) -o $@
 
+.PHONY: clean
 clean:
 	rm -rf $(BUILD_PATH)
