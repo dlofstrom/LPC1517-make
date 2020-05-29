@@ -6,3 +6,17 @@ include $(SDK_PATH)/Makefile.sdk
 
 # Linker scripts
 CFLAGS += -L$(CORE_PATH) -Tlpc1517.ld
+
+# Assemble core files
+OS_PATH = $(CORE_PATH)/os
+CORE_SRC_FILES = $(wildcard $(OS_PATH)/*.c)
+CORE_OBJ_FILES = $(addprefix $(BUILD_PATH)/, $(CORE_SRC_FILES:.c=.o))
+
+# Add core specifig variables to global variables
+INC += $(OS_PATH)
+OBJ += $(CORE_OBJ_FILES)
+
+# Build core files
+$(CORE_OBJ_FILES): $(BUILD_PATH)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) -I$(OS_PATH) -I$(SDK_INC) $(CFLAGS) -o $@ -c $<

@@ -32,7 +32,6 @@ SDK_OBJ_FILES = $(addprefix $(BUILD_PATH)/, $(SDK_SRC_FILES:.c=.o))
 SDK_CFLAGS = -DCORE_M3 -mcpu=cortex-m3 -Xlinker --gc-sections -Xlinker
 
 # Add SDK specific variables to global variables
-INC += $(SDK_INC)
 OBJ += $(SDK_OBJ_FILES)
 CFLAGS += $(SDK_CFLAGS)
 
