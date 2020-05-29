@@ -1,0 +1,8 @@
+# This makefile compiles the abstraction layer for the application code
+
+# Include SDK makefile
+SDK_PATH = $(CORE_PATH)/sdk
+include $(SDK_PATH)/Makefile.sdk
+
+# Linker scripts
+CFLAGS += -L$(CORE_PATH) -Tlpc1517.ld

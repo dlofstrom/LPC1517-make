@@ -1,20 +1,20 @@
-# This makefile compiles the abstraction layer for the application code
+# Main makefile for application
+
 BINARY = test
 CC = arm-none-eabi-gcc
 COPY = arm-none-eabi-objcopy
-SDK_PATH = sdk
 BUILD_PATH = build
 
 all: $(BINARY)
 
-# Include SDK makefile
-include $(SDK_PATH)/Makefile.sdk
+CORE ?= lpc1517
+CORE_PATH = core/$(CORE)
+include $(CORE_PATH)/Makefile.core
 
-# Test code
+# Main source file
 MAIN = main.c
 MAIN_OBJ = $(BUILD_PATH)/$(MAIN:.c=.o)
 OBJ += $(MAIN_OBJ)
-CFLAGS += -Tlpc1517.ld
 
 $(MAIN_OBJ): $(MAIN)
 	$(CC) -I$(INC) $(CFLAGS) -o $@ -c $<
