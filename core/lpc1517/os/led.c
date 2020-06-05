@@ -1,12 +1,6 @@
 #include "led.h"
 #include "chip.h"
-
-#ifndef LED_PORT
-#define LED_PORT 0
-#endif
-#ifndef LED_PIN
-#define LED_PIN 29
-#endif
+#include "pins.h"
 
 void led_init(void) {
   Chip_GPIO_Init(LPC_GPIO);

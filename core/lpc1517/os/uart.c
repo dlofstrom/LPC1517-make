@@ -1,15 +1,8 @@
 #include "uart.h"
 #include "chip.h"
+#include "pins.h"
 
-#define UART_TX_PORT 0
-#define UART_TX_PIN 22
-#define UART_RX_PORT 0
-#define UART_RX_PIN 23
-// The fixed pins on the chosen uart pins have to be disabled
-#define UART_TX_FIXED_PIN SWM_FIXED_I2C0_SCL
-#define UART_RX_FIXED_PIN SWM_FIXED_I2C0_SDA
 #define UART_BAUD 9600
-
 #define RINGBUFF_SIZE 128
 static RINGBUFF_T txring;
 static uint8_t tx_buff[RINGBUFF_SIZE];
