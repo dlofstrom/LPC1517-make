@@ -53,9 +53,6 @@ void uart_init(void) {
   Chip_UART_IntEnable(LPC_USART0, UART_INTEN_RXRDY);
   Chip_UART_IntDisable(LPC_USART0, UART_INTEN_TXRDY);
   NVIC_EnableIRQ(UART0_IRQn);
-
-  const char inst1[] = "LPC1517 UART test\n";
-  Chip_UART_SendBlocking(LPC_USART0, inst1, sizeof(inst1) - 1);
 }
 
 uint8_t uart_available(void) {

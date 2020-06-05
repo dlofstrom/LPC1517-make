@@ -1,6 +1,7 @@
 #include "led.h"
 #include "timer.h"
 #include "uart.h"
+#include <stdio.h>
 
 int main(void) {
   // Initialize LED
@@ -13,11 +14,7 @@ int main(void) {
 
   // Initialize UART
   uart_init();
-
-  const char *hello_world = "Hello World\n";
-  for(char *c = hello_world; *c != '\0'; c++) {
-    uart_write(*c);
-  }
+  printf("Hello World\n");
 
   while(1) {
     toc = timer_get_ms();
